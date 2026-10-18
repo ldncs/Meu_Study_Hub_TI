@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Study Hub: portfólio acadêmico de Lucas Santos em Engenharia de Software, com disciplinas, anotações e projetos.">
+  <meta name="theme-color" content="#0b1830">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Study Hub | Lucas Santos">
+  <meta property="og:description" content="Atividades, anotações e projetos de Engenharia de Software reunidos em um só repositório.">
+  <title>Study Hub | Lucas Santos</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230b1830'/><path d='M9 23V9h14' fill='none' stroke='%23ffd25a' stroke-width='3.5'/></svg>">
+
+  <!-- Aplica o tema salvo antes de desenhar a página, para evitar o "piscar" -->
+  <script>
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem("theme"); } catch (e) {}
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+  <style>
+    /* ---------- Tokens ---------- */
+    :root {
+      color-scheme: dark;
+      --bg: #0b1830;
+      --surface: #10213f;
+      --ink: #e8effa;
+      --muted: #a0b4d3;
+      --line: #2a4470;
+      --grid: rgba(143, 184, 255, 0.06);
+      --grid-major: rgba(143, 184, 255, 0.11);
+      --link: #9cc2ff;
+      --marker: #ffd25a;
+      --on-marker: #0b1830;
+      --focus: #ffd25a;
+
+      --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+      --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-code: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      --radius: 6px;
+      --wrap: 1120px;
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f6f9fd;
+      --surface: #ffffff;
+      --ink: #0b1830;
+      --muted: #40567a;
+      --line: #b9c9e0;
+      --grid: rgba(27, 79, 216, 0.06);
+      --grid-major: rgba(27, 79, 216, 0.11);
+      --link: #1b4fd8;
+      --focus: #1b4fd8;
+    }
+
+    /* ---------- Base ---------- */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: var(--ink);
+      background-color: var(--bg);
+      /* papel quadriculado: linhas finas a cada 32px e marcadas a cada 128px */
+      background-image:
+        linear-gradient(var(--grid-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 128px 128px, 128px 128px, 32px 32px, 32px 32px;
+      background-position: -1px -1px;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      font-stretch: 82%;
+      font-optical-sizing: auto;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    p { margin: 0; }
+
+    a { color: var(--link); text-underline-offset: 0.2em; }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .wrap {
+      width: min(100% - 40px, var(--wrap));
+      margin-inline: auto;
+    }
+
+    .skip {
+      position: absolute;
+      left: 12px;
+      top: -60px;
+      z-index: 10;
+      padding: 10px 16px;
+      background: var(--marker);
+      color: var(--on-marker);
+      font-weight: 600;
+      border-radius: var(--radius);
+      text-decoration: none;
+    }
+    .skip:focus { top: 12px; }
+
+    /* ---------- Topo ---------- */
+    .bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 28px;
+      padding: 20px 0;
+    }
+
+    .who {
+      font-family: var(--font-display);
+      font-stretch: 82%;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .bar nav { margin-left: auto; }
+
+    .bar ul {
+      display: flex;
+      gap: 6px 26px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .bar nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.97rem;
+      padding: 6px 0;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.15s ease;
+    }
+    .bar nav a:hover { border-bottom-color: var(--marker); }
+
+    .theme-btn {
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 16px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .theme-btn:hover { border-color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .bar nav { order: 3; flex-basis: 100%; margin-left: 0; }
+      .theme-btn { margin-left: auto; }
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: clamp(32px, 6vw, 80px);
+      align-items: center;
+      padding: clamp(40px, 7vw, 88px) 0 clamp(56px, 8vw, 104px);
+    }
+
+    .hero h1 {
+      font-size: clamp(3.4rem, 11vw, 7.25rem);
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -0.035em;
+    }
+
+    .hero .lead {
+      max-width: 44ch;
+      margin-top: 28px;
+      font-size: clamp(1.1rem, 2vw, 1.3rem);
+      line-height: 1.6;
+    }
+
+    /* cota de desenho técnico: único movimento da página, ao carregar */
+    .dim {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 28px;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .dim i {
+      position: relative;
+      display: block;
+      flex: 1;
+      height: 1px;
+      background: currentColor;
+      transform: scaleX(0);
+      animation: draw 0.9s 0.25s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+    }
+    .dim i:first-child { transform-origin: right center; }
+    .dim i:last-child { transform-origin: left center; }
+    .dim i::before {
+      content: "";
+      position: absolute;
+      top: -7px;
+      width: 1px;
+      height: 15px;
+      background: currentColor;
+    }
+    .dim i:first-child::before { left: 0; }
+    .dim i:last-child::before { right: 0; }
+    .dim span {
+      opacity: 0;
+      animation: fade 0.5s 0.9s ease forwards;
+      white-space: nowrap;
+    }
+
+    @keyframes draw { to { transform: scaleX(1); } }
+    @keyframes fade { to { opacity: 1; } }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 36px;
+    }
+
+    .btn {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      padding: 13px 24px;
+      border-radius: var(--radius);
+      border: 2px solid var(--ink);
+      color: var(--ink);
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:hover { background: var(--ink); color: var(--bg); }
+
+    .btn-primary {
+      background: var(--marker);
+      border-color: var(--marker);
+      color: var(--on-marker);
+    }
+    .btn-primary:hover {
+      background: transparent;
+      border-color: var(--marker);
+      color: var(--ink);
+    }
+
+    /* estrutura do repositório */
+    .tree {
+      margin: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .tree figcaption {
+      padding: 14px 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .tree pre {
+      margin: 0;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: var(--font-code);
+      font-size: 0.86rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+    .tree .dir { color: var(--link); }
+    .tree .open { color: var(--ink); font-weight: 600; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    /* ---------- Seções em "folha": título à esquerda, conteúdo à direita ---------- */
+    .sheet {
+      display: grid;
+      grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: clamp(24px, 5vw, 72px);
+      padding: clamp(48px, 8vw, 96px) 0;
+      border-top: 1px solid var(--line);
+      scroll-margin-top: 8px;
+    }
+
+    .sheet-head h2 {
+      font-size: clamp(2rem, 4.5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1;
+    }
+    .sheet-head p {
+      margin-top: 14px;
+      max-width: 28ch;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    @media (max-width: 860px) {
+      .sheet { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    /* Sobre */
+    .about-text {
+      max-width: 60ch;
+      font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+      line-height: 1.55;
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 44px;
+    }
+    .pillars h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      padding-top: 14px;
+      border-top: 3px solid var(--marker);
+    }
+    .pillars p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .pillars { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    /* Disciplinas */
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .toc li { background: var(--surface); }
+
+    .entry {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: 100%;
+      padding: 26px 26px 24px;
+      color: var(--ink);
+      text-decoration: none;
+      transition: box-shadow 0.18s ease;
+    }
+    .entry:hover { box-shadow: inset 4px 0 0 var(--marker); }
+    .entry:focus-visible { outline-offset: -4px; border-radius: 0; }
+
+    .entry h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .entry p { color: var(--muted); font-size: 1rem; }
+    .entry code {
+      margin-top: auto;
+      padding-top: 10px;
+      font-family: var(--font-code);
+      font-size: 0.78rem;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+    .entry .go {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--link);
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+      text-decoration-color: transparent;
+      transition: text-decoration-color 0.15s ease;
+    }
+    .entry:hover .go { text-decoration-color: currentColor; }
+
+    @media (max-width: 700px) {
+      .toc { grid-template-columns: 1fr; }
+    }
+
+    /* Projetos */
+    .placeholder {
+      max-width: 60ch;
+      padding: 32px;
+      border: 2px dashed var(--line);
+      border-radius: var(--radius);
+    }
+    .placeholder strong {
+      display: block;
+      font-family: var(--font-display);
+      font-stretch: 82%;
+      font-size: 1.4rem;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .placeholder p { color: var(--muted); }
+
+    /* Contato */
+    .contact-text { max-width: 46ch; font-size: 1.2rem; line-height: 1.55; }
+
+    /* ---------- Rodapé com legenda de prancha ---------- */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 40px 0 56px;
+    }
+    .foot {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+    }
+    .foot p {
+      max-width: 36ch;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .block {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      width: min(100%, 440px);
+      margin: 0;
+      background: var(--line);
+      border: 2px solid var(--ink);
+    }
+    .block div {
+      padding: 10px 14px 12px;
+      background: var(--surface);
+    }
+    .block dt { color: var(--muted); font-size: 0.8rem; line-height: 1.3; }
+    .block dd {
+      margin: 2px 0 0;
+      font-family: var(--font-display);
+      font-stretch: 82%;
+      font-weight: 700;
+      font-size: 1.15rem;
+      line-height: 1.25;
+    }
+
+    @media (max-width: 700px) {
+      .block { width: 100%; }
+    }
+
+    /* ---------- Movimento reduzido ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .dim i { animation: none; transform: none; }
+      .dim span { animation: none; opacity: 1; }
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+
+  <header>
+    <div class="wrap bar">
+      <a class="who" href="#top">Lucas Santos</a>
+      <nav aria-label="Principal">
+        <ul>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#disciplinas">Disciplinas</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+      <button class="theme-btn" id="theme-toggle" type="button">Tema claro</button>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="wrap">
+
+      <section class="hero" aria-labelledby="titulo">
+        <div>
+          <h1 id="titulo">Study Hub</h1>
+          <p class="lead">
+            Meu portfólio acadêmico em Engenharia de Software: atividades,
+            anotações e projetos reunidos em um só repositório.
+          </p>
+          <div class="dim" aria-hidden="true">
+            <i></i><span>6 disciplinas em 1 repositório</span><i></i>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary" href="#disciplinas">Ver disciplinas</a>
+            <a class="btn" href="https://github.com/ldncs/Meu_Study_Hub_TI" target="_blank" rel="noopener noreferrer">Ver no GitHub</a>
+          </div>
+        </div>
+
+        <figure class="tree">
+          <figcaption>Estrutura do repositório</figcaption>
+          <pre><code><span class="open">Meu_Study_Hub_TI/</span>
+├── index.html
+└── <span class="dir">02_Disciplinas_Atuais/</span>
+    ├── <span class="dir">Bootcamp_I/</span>
+    ├── <span class="dir">Logica_de_Programacao/</span>
+    ├── <span class="dir">Engenharia_de_Software/</span>
+    ├── <span class="dir">Introducao_a_Computacao/</span>
+    ├── <span class="dir">Fundamentos_de_Engenharia/</span>
+    └── <span class="dir">Banco_de_Dados_I/</span>
+        ├── <span class="dir">Atividades_e_Entregas/</span>
+        ├── <span class="dir">Anotacoes_e_Resumos/</span>
+        └── README.md</code></pre>
+        </figure>
+      </section>
+
+      <section class="sheet" id="sobre" aria-labelledby="sobre-titulo">
+        <div class="sheet-head">
+          <h2 id="sobre-titulo">Conhecimento organizado. Soluções reais.</h2>
+        </div>
+        <div>
+          <p class="about-text">
+            O Study Hub documenta minha jornada em Engenharia de Software.
+            Cada atividade, anotação e projeto fica registrado e versionado,
+            para que eu possa revisar o que aprendi e mostrar como evoluí.
+            Meu objetivo é unir tecnologia, dados e visão de negócios para
+            resolver problemas reais de empresas.
+          </p>
+          <div class="pillars">
+            <div>
+              <h3>Engenharia de Software</h3>
+              <p>Requisitos, documentação e qualidade para construir software que outras pessoas conseguem manter.</p>
+            </div>
+            <div>
+              <h3>Dados</h3>
+              <p>Modelagem e SQL para transformar registros em informação que ajuda a decidir.</p>
+            </div>
+            <div>
+              <h3>Negócios</h3>
+              <p>A experiência em Administração me ajuda a começar pelo problema da empresa, não pela ferramenta.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sheet" id="disciplinas" aria-labelledby="disciplinas-titulo">
+        <div class="sheet-head">
+          <h2 id="disciplinas-titulo">Disciplinas</h2>
+          <p>Cada pasta tem uma área de atividades e outra de anotações.</p>
+        </div>
+        <ul class="toc">
+          <li>
+            <a class="entry" href="02_Disciplinas_Atuais/Bootcamp_I/README.md">
+              <h3>Bootcamp I</h3>
+              <p>Organização do portfólio e versionamento de projetos.</p>
+              <span class="go">Explorar disciplina</span>
+              <code>02_Disciplinas_Atuais/Bootcamp_I/</code>
+            </a>
+          </li>
+          <li>
+            <a class="entry" href="02_Disciplinas_Atuais/Logica_de_Programacao/README.md">
+              <h3>Lógica de Programação</h3>
+              <p>Raciocínio lógico, algoritmos e resolução de problemas.</p>
+              <span class="go">Explorar disciplina</span>
+              <code>02_Disciplinas_Atuais/Logica_de_Programacao/</code>
+            </a>
+          </li>
+          <li>
+            <a class="entry" href="02_Disciplinas_Atuais/Engenharia_de_Software/README.md">
+              <h3>Engenharia de Software</h3>
+              <p>Requisitos, documentação e qualidade de software.</p>
+              <span class="go">Explorar disciplina</span>
+              <code>02_Disciplinas_Atuais/Engenharia_de_Software/</code>
+            </a>
+          </li>
+          <li>
+            <a class="entry" href="02_Disciplinas_Atuais/Introducao_a_Computacao/README.md">
+              <h3>Introdução à Computação</h3>
+              <p>Fundamentos de hardware, sistemas e redes.</p>
+              <span class="go">Explorar disciplina</span>
+              <code>02_Disciplinas_Atuais/Introducao_a_Computacao/</code>
+            </a>
+          </li>
+          <li>
+            <a class="entry" href="02_Disciplinas_Atuais/Fundamentos_de_Engenharia/README.md">
+              <h3>Fundamentos de Engenharia</h3>
+              <p>Método científico, unidades e resolução estruturada de problemas.</p>
+              <span class="go">Explorar disciplina</span>
+              <code>02_Disciplinas_Atuais/Fundamentos_de_Engenharia/</code>
+            </a>
+          </li>
+          <li>
+            <a class="entry" href="02_Disciplinas_Atuais/Banco_de_Dados_I/README.md">
+              <h3>Banco de Dados I</h3>
+              <p>Modelagem de dados e fundamentos de SQL.</p>
+              <span class="go">Explorar disciplina</span>
+              <code>02_Disciplinas_Atuais/Banco_de_Dados_I/</code>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="sheet" id="projetos" aria-labelledby="projetos-titulo">
+        <div class="sheet-head">
+          <h2 id="projetos-titulo">Projetos</h2>
+        </div>
+        <div class="placeholder">
+          <strong>O primeiro projeto entra aqui.</strong>
+          <p>
+            Cada projeto terá repositório, documentação e um registro do que
+            aprendi construindo.
+          </p>
+        </div>
+      </section>
+
+      <section class="sheet" id="contato" aria-labelledby="contato-titulo">
+        <div class="sheet-head">
+          <h2 id="contato-titulo">Contato</h2>
+        </div>
+        <div>
+          <p class="contact-text">
+            Vamos conversar sobre tecnologia, dados e negócios.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://www.linkedin.com/in/lucas-dc-santos/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a class="btn" href="https://github.com/ldncs/Meu_Study_Hub_TI" target="_blank" rel="noopener noreferrer">Repositório no GitHub</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <p>Projeto acadêmico em evolução, feito com HTML, CSS e um pouco de JavaScript.</p>
+      <dl class="block">
+        <div><dt>Projeto</dt><dd>Study Hub</dd></div>
+        <div><dt>Autor</dt><dd>Lucas Santos</dd></div>
+        <div><dt>Curso</dt><dd>Engenharia de Software</dd></div>
+        <div><dt>Versão</dt><dd>1.0</dd></div>
+      </dl>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var button = document.getElementById("theme-toggle");
+
+      function apply(theme) {
+        root.setAttribute("data-theme", theme);
+        button.textContent = theme === "light" ? "Tema escuro" : "Tema claro";
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", theme === "light" ? "#f6f9fd" : "#0b1830");
+      }
+
+      apply(root.getAttribute("data-theme"));
+
+      button.addEventListener("click", function () {
+        var next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+        apply(next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+      });
+    })();
+  </script>
+</body>
+</html>
